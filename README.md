@@ -42,7 +42,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: fbirds5230/promptguard-ci@v0
+      - uses: Ventrova/promptguard-ci@v0
         with:
           url: https://api.openai.com/v1/chat/completions
           model: gpt-4o-mini
@@ -71,7 +71,7 @@ baseline once and switch to regression mode - PromptGuard then fails only on
 attacks that succeed now but didn't in the baseline:
 
 ```yaml
-      - uses: fbirds5230/promptguard-ci@v0
+      - uses: Ventrova/promptguard-ci@v0
         with:
           url: https://api.openai.com/v1/chat/completions
           model: gpt-4o-mini

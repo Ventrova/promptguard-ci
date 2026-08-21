@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: PromptGuard CI (demo target)
-        uses: fbirds5230/promptguard-ci@v0
+        uses: Ventrova/promptguard-ci@v0
         with:
           demo: "true"
           max-vulnerable-rate: "0.0"
