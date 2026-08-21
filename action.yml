@@ -1,0 +1,75 @@
+name: "PromptGuard CI"
+description: "Run a curated prompt-injection attack pack against your LLM endpoint and fail CI on a regression threshold."
+author: "Ventrova"
+branding:
+  icon: "shield"
+  color: "purple"
+
+inputs:
+  url:
+    description: "OpenAI-compatible chat completions URL (e.g. https://api.openai.com/v1/chat/completions). Omit with demo: true."
+    required: false
+  model:
+    description: "Model name as expected by your endpoint. Omit with demo: true."
+    required: false
+  api-key:
+    description: "API key for your endpoint. Prefer passing this via a repo secret."
+    required: false
+  system-prompt-file:
+    description: "Path to a text file containing your system prompt."
+    required: false
+  secret:
+    description: "A literal marker string planted in your system prompt, checked for leakage."
+    required: false
+  max-vulnerable-rate:
+    description: "Fail if the fraction of attacks that bypass your system prompt exceeds this value. Ignored if baseline is set."
+    required: false
+    default: "0.0"
+  baseline:
+    description: "Path to a previous results JSON file. If set, PromptGuard fails only on NEW vulnerabilities vs this baseline."
+    required: false
+  demo:
+    description: "Run against the built-in demo target with no network calls, to try the action out."
+    required: false
+    default: "false"
+  output:
+    description: "Path to write the full JSON results."
+    required: false
+    default: "promptguard_results.json"
+
+outputs:
+  results-path:
+    description: "Path to the JSON results file written by this run."
+    value: ${{ steps.run.outputs.results-path }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - name: Run PromptGuard CI
+      id: run
+      shell: bash
+      env:
+        PROMPTGUARD_API_KEY: ${{ inputs.api-key }}
+      run: |
+        set -e
+        ARGS=(--output "${{ inputs.output }}")
+        if [ "${{ inputs.demo }}" = "true" ]; then
+          ARGS+=(--demo)
+        else
+          [ -n "${{ inputs.url }}" ] && ARGS+=(--url "${{ inputs.url }}")
+          [ -n "${{ inputs.model }}" ] && ARGS+=(--model "${{ inputs.model }}")
+        fi
+        [ -n "${{ inputs.system-prompt-file }}" ] && ARGS+=(--system-prompt-file "${{ inputs.system-prompt-file }}")
+        [ -n "${{ inputs.secret }}" ] && ARGS+=(--secret "${{ inputs.secret }}")
+        if [ -n "${{ inputs.baseline }}" ]; then
+          ARGS+=(--baseline "${{ inputs.baseline }}")
+        else
+          ARGS+=(--max-vulnerable-rate "${{ inputs.max-vulnerable-rate }}")
+        fi
+        echo "results-path=${{ inputs.output }}" >> "$GITHUB_OUTPUT"
+        python "${{ github.action_path }}/promptguard.py" "${ARGS[@]}"

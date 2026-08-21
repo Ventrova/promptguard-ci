@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+promptguard_results.json
+pass_case.json
+fail_case.json

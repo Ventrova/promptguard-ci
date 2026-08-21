@@ -1,0 +1,45 @@
+name: test
+
+# Self-test for this repo: exercises the action against itself (uses: ./)
+# in both a passing and a failing configuration, and asserts the exit
+# code behaves as documented. This is what keeps the action honest on
+# every push, distinct from example.yml which is the copy-paste sample
+# for downstream users.
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  self-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Demo run should PASS with a lenient threshold
+        id: pass_case
+        uses: ./
+        with:
+          demo: "true"
+          max-vulnerable-rate: "1.0"
+          output: "pass_case.json"
+
+      - name: Demo run should FAIL with zero tolerance
+        id: fail_case
+        continue-on-error: true
+        uses: ./
+        with:
+          demo: "true"
+          max-vulnerable-rate: "0.0"
+          output: "fail_case.json"
+
+      - name: Assert fail_case actually failed
+        if: steps.fail_case.outcome != 'failure'
+        run: |
+          echo "expected the zero-tolerance demo run to fail CI, but it passed" >&2
+          exit 1
+
+      - name: Assert results files were written
+        run: |
+          test -f pass_case.json
+          test -f fail_case.json

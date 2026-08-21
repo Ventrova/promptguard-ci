@@ -1,0 +1,32 @@
+name: PromptGuard CI example
+
+# This is the runnable example referenced in README.md. It uses the
+# built-in demo target (no network calls, no secrets required) so you can
+# fork this repo or copy this file and see PromptGuard fail a build for
+# real on the first run.
+#
+# For your own project, drop the "PromptGuard CI" step into any workflow,
+# remove `demo: true`, and point `url`/`model` at your endpoint.
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  promptguard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: PromptGuard CI (demo target)
+        uses: Ventrova/promptguard-ci@v0
+        with:
+          demo: "true"
+          max-vulnerable-rate: "0.0"
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: promptguard-results
+          path: promptguard_results.json
