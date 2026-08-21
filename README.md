@@ -1,5 +1,7 @@
 # PromptGuard CI
 
+[![test](https://github.com/Ventrova/promptguard-ci/actions/workflows/test.yml/badge.svg)](https://github.com/Ventrova/promptguard-ci/actions/workflows/test.yml)
+
 **Free GitHub Action + CLI: catch prompt-injection regressions before they ship.**
 
 PromptGuard CI runs a small curated pack of prompt-injection / jailbreak
@@ -58,9 +60,16 @@ detect verbatim leakage. Don't use a real credential - it's just a canary.
 
 Want to try it with zero setup first? See
 [`.github/workflows/example.yml`](.github/workflows/example.yml) - it runs
-against a built-in demo target with no network calls and no secrets, and
-will fail on the first run so you can see what a caught regression looks
-like.
+against a built-in demo target with no network calls and no secrets. It is
+deliberately configured with zero tolerance against a vulnerable demo
+prompt, so it is *meant* to fail every time - that's what a caught
+regression looks like. It only triggers on demand (Actions tab -> "Run
+workflow"), so trying it out doesn't affect this repo's own status.
+
+This repo's own CI health is [`.github/workflows/test.yml`](.github/workflows/test.yml)
+(the badge above) - it runs the action against both a lenient threshold
+(should pass) and a zero-tolerance threshold (should fail), then asserts
+both outcomes are correct. That's what stays green on every push.
 
 ### Regression mode
 

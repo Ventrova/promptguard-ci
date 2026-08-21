@@ -1,24 +1,31 @@
-name: PromptGuard CI example
+name: PromptGuard CI example (intentional failure demo)
 
 # This is the runnable example referenced in README.md. It uses the
-# built-in demo target (no network calls, no secrets required) so you can
-# fork this repo or copy this file and see PromptGuard fail a build for
-# real on the first run.
+# built-in demo target (no network calls, no secrets required) against a
+# deliberately vulnerable demo system prompt, with zero tolerance for
+# vulnerabilities - so it is EXPECTED to fail every time it runs. That is
+# the point: it shows a real caught regression, not a smoke test.
+#
+# It intentionally does NOT trigger on push/pull_request so it can't
+# redden the repo's default Actions status - trigger it manually from the
+# Actions tab (Run workflow) or via `workflow_dispatch` when you want to
+# see the fail-the-build behavior for yourself.
 #
 # For your own project, drop the "PromptGuard CI" step into any workflow,
-# remove `demo: true`, and point `url`/`model` at your endpoint.
+# remove `demo: true`, and point `url`/`model` at your endpoint. See
+# `.github/workflows/test.yml` for the workflow that actually gates this
+# repo's default branch status.
 
 on:
-  push:
   workflow_dispatch:
 
 jobs:
-  promptguard:
+  promptguard-intentional-failure-demo:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: PromptGuard CI (demo target)
+      - name: PromptGuard CI (demo target, zero tolerance - expected to fail)
         uses: Ventrova/promptguard-ci@v0
         with:
           demo: "true"
