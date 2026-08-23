@@ -4,6 +4,10 @@
 
 **Free GitHub Action + CLI: catch prompt-injection regressions before they ship.**
 
+```bash
+curl -sSL https://raw.githubusercontent.com/Ventrova/promptguard-ci/main/promptguard.py -o promptguard.py && python promptguard.py --demo
+```
+
 PromptGuard CI runs a small curated pack of prompt-injection / jailbreak
 attacks against your own LLM-backed endpoint on every push or PR, and fails
 the build when your guardrails get worse - not just when they're bad.
