@@ -1,6 +1,9 @@
 # PromptGuard CI
 
 [![test](https://github.com/Ventrova/promptguard-ci/actions/workflows/test.yml/badge.svg)](https://github.com/Ventrova/promptguard-ci/actions/workflows/test.yml)
+[![LLM Security: Scanned](https://ventrova.dev/badges/llm-security-scanned.svg)](https://ventrova.dev)
+[![Prompt Injection: Tested](https://ventrova.dev/badges/prompt-injection-tested.svg)](https://ventrova.dev)
+[![EU AI Act: Scanned](https://ventrova.dev/badges/ai-act-ready.svg)](https://ventrova.dev/eu-ai-act-checklist/)
 
 **Free GitHub Action + CLI: catch prompt-injection regressions before they ship.**
 
