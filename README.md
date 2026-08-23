@@ -171,6 +171,10 @@ weird-but-safe reply.
 For a deeper, LLM-judged audit with a full report and multi-turn scenarios:
 [ventrova.dev/audit](https://ventrova.dev/audit).
 
+## Related
+
+- [Sentinel Scan CLI](https://github.com/Ventrova/sentinel-scan-cli) - the standalone one-shot version of this attack pack, for a quick manual check outside of CI.
+
 ## Contributing
 
 Issues and PRs welcome, especially new attack techniques with a clear
